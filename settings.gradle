@@ -1,2 +1,2 @@
-include ':presentation'
+include ':presentation', ':data'
 rootProject.name='Heady-AT'
