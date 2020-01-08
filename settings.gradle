@@ -1,2 +1,2 @@
 include ':presentation', ':data', ':domain'
-rootProject.name='Heady-AT'
+rootProject.name = 'Heady-AT'

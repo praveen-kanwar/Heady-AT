@@ -1,3 +1,16 @@
 <resources>
+    <!-- Application Name -->
     <string name="app_name">Heady-AT</string>
+
+    <!-- All Strings Related To Firebase Notification -->
+    <string name="notification_channel_id" translatable="false">collection_notification_channel</string>
+
+    <!-- All Strings Related To Error -->
+    <string name="sorry_something_went_wrong" translatable="false">The application has encountered an error.\n Our technical staff have been automatically notified and will be looking into this with the utmost urgency.</string>
+    <string name="dismiss_error" translatable="false">Dismiss</string>
+
+    <!-- All Strings Related To Splash Page -->
+    <string name="splash_logo_description">Branding Logo Of Application.</string>
+    <string name="splash_logo_transition_name">ApplicationLogo</string>
+
 </resources>

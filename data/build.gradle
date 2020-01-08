@@ -1,36 +1,131 @@
 apply plugin: 'com.android.library'
+
 apply plugin: 'kotlin-android'
+
 apply plugin: 'kotlin-android-extensions'
+
+apply plugin: 'kotlin-kapt'
+
+apply plugin: 'realm-android'
+
 android {
-    compileSdkVersion 29
-    buildToolsVersion "29.0.2"
+    // SDK & Tool Version Used For Compiling
+    compileSdkVersion TARGET_SDK
+    buildToolsVersion BUILD_TOOLS_VERSION
 
-
+    // Application Specifications
     defaultConfig {
-        minSdkVersion 21
-        targetSdkVersion 29
-        versionCode 1
-        versionName "1.0"
-
-        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
-        consumerProguardFiles 'consumer-rules.pro'
+        minSdkVersion MIN_SDK
+        targetSdkVersion TARGET_SDK
+        versionCode VERSION_CODE
+        versionName VERSION_NAME
+        testInstrumentationRunner ANDROID_JUNIT_RUNNER
     }
 
     buildTypes {
-        release {
+        debug {
+            // Enables/Disable Code Shrinking, Obfuscation & Optimization Only For Release Build.
             minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            proguardFiles getDefaultProguardFile(PROGUARD_ANDROID_OPTIMIZE), PROGUARD_RULES
+            debuggable true
+            jniDebuggable true
+            renderscriptDebuggable true
+        }
+
+        release {
+            // Enables/Disable Code Shrinking, Obfuscation & Optimization Only For Release Build.
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile(PROGUARD_ANDROID_OPTIMIZE), PROGUARD_RULES
+            debuggable false
+            jniDebuggable false
+            renderscriptDebuggable false
         }
     }
 
+    // Specifying Java Compiler Version
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    // Specify Kotlin JVM Target
+    kotlinOptions {
+        jvmTarget = JavaVersion.VERSION_1_8
+    }
+
+    // Adding Dimensions [Version]
+    // And Flavour [SandBox], [UAT], [PRODUCTION aka PROD] Of Build
+    flavorDimensions APPLICATION_DIMENSIONS
+    productFlavors {
+        sandbox {
+            dimension APPLICATION_DIMENSIONS
+            buildConfigField APPLICATION_SIGNATURE_FIELD_TYPE, APPLICATION_SIGNATURE_KEY, APPLICATION_SIGNATURE
+            buildConfigField DATABASE_FIELD_TYPE, DATABASE_PASSWORD_KEY, DATABASE_PASSWORD
+            buildConfigField BASE_URL_FIELD_TYPE, BASE_URL_FIELD_KEY, BASE_URL_VALUE_SANDBOX
+            buildConfigField TRUST_STORE_PASSWORD_FIELD_TYPE, TRUST_STORE_PASSWORD_KEY, TRUST_STORE_PASSWORD
+        }
+        uat {
+            dimension APPLICATION_DIMENSIONS
+            buildConfigField APPLICATION_SIGNATURE_FIELD_TYPE, APPLICATION_SIGNATURE_KEY, APPLICATION_SIGNATURE
+            buildConfigField DATABASE_FIELD_TYPE, DATABASE_PASSWORD_KEY, DATABASE_PASSWORD
+            buildConfigField BASE_URL_FIELD_TYPE, BASE_URL_FIELD_KEY, BASE_URL_VALUE_UAT
+            buildConfigField TRUST_STORE_PASSWORD_FIELD_TYPE, TRUST_STORE_PASSWORD_KEY, TRUST_STORE_PASSWORD
+        }
+        prod {
+            dimension APPLICATION_DIMENSIONS
+            buildConfigField APPLICATION_SIGNATURE_FIELD_TYPE, APPLICATION_SIGNATURE_KEY, APPLICATION_SIGNATURE
+            buildConfigField DATABASE_FIELD_TYPE, DATABASE_PASSWORD_KEY, DATABASE_PASSWORD
+            buildConfigField BASE_URL_FIELD_TYPE, BASE_URL_FIELD_KEY, BASE_URL_VALUE_PRODUCTION
+            buildConfigField TRUST_STORE_PASSWORD_FIELD_TYPE, TRUST_STORE_PASSWORD_KEY, TRUST_STORE_PASSWORD
+        }
+    }
+
+    // Ignore Irrelevant Build Variants
+    variantFilter { variant ->
+        def names = variant.flavors*.name
+        // Ignore Release Build for Dev & UAT Build
+        if (variant.buildType.name == 'release' && (names.contains("sandbox") || names.contains("uat"))) {
+            setIgnore(true)
+        }
+        // Ignore Debug Build for Production
+        else if (variant.buildType.name == 'debug' && names.contains("prod")) {
+            setIgnore(true)
+        }
+    }
+
+    // Lint Options To Be Followed
+    lintOptions {
+        checkAllWarnings true
+        warningsAsErrors true
+        abortOnError true
+    }
 }
 
 dependencies {
+    // Manual Added Library
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-    implementation 'androidx.appcompat:appcompat:1.1.0'
-    implementation 'androidx.core:core-ktx:1.1.0'
-    testImplementation 'junit:junit:4.12'
-    androidTestImplementation 'androidx.test.ext:junit:1.1.1'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
+    implementation project(':domain')
+
+    // Require Library To Be Downloaded Via Gradle From Repository Defined In Project Gradle File
+    //implementation moduleDependencies.couchbase
+    implementation moduleDependencies.javaX
+    implementation moduleDependencies.kotlin
+    implementation moduleDependencies.okHttp3
+    implementation moduleDependencies.okHttp3LoggingInterceptor
+    implementation moduleDependencies.okio
+    implementation moduleDependencies.retrofit2
+    implementation moduleDependencies.retrofit2Converter
+    implementation moduleDependencies.retrofit2RxJavaAdapter
+    implementation moduleDependencies.rxAndroid
+    implementation moduleDependencies.rxJava
+    implementation moduleDependencies.rxKotlin
+    implementation moduleDependencies.tejoraUtils
+
+    // Runs On JVM Pure Java Test Cases
+    testImplementation moduleTestDependencies.junit
+
+    // Requires Android Framework For Testing Android Components
+    androidTestImplementation moduleTestDependencies.junit
+    androidTestImplementation moduleTestDependencies.runner
+    androidTestImplementation moduleTestDependencies.espresso
 }

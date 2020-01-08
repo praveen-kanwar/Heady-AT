@@ -1,8 +1,32 @@
 apply plugin: 'java-library'
+apply plugin: 'kotlin'
 
 dependencies {
+    // Manual Added Library
     implementation fileTree(dir: 'libs', include: ['*.jar'])
+
+    // Require Library To Be Downloaded Via Gradle From Repository Defined In Project Gradle File
+    implementation moduleDependencies.javaX
+    implementation moduleDependencies.kotlin
+    implementation moduleDependencies.rxJava
+    implementation moduleDependencies.rxKotlin
+
+    // Runs On JVM Pure Java Test Cases
+    testImplementation moduleTestDependencies.junit
+    testImplementation moduleTestDependencies.mockito
 }
 
-sourceCompatibility = "7"
-targetCompatibility = "7"
+sourceCompatibility = JavaVersion.VERSION_1_8
+targetCompatibility = JavaVersion.VERSION_1_8
+
+compileKotlin {
+    kotlinOptions {
+        jvmTarget = JavaVersion.VERSION_1_8
+    }
+}
+
+compileTestKotlin {
+    kotlinOptions {
+        jvmTarget = JavaVersion.VERSION_1_8
+    }
+}

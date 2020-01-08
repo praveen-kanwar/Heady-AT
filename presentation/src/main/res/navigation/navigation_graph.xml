@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/navigation_graph"
+    app:startDestination="@+id/navigateToSplashFragment">
+
+    <fragment
+        android:id="@+id/navigateToSplashFragment"
+        android:name="com.heady.test.modules.splash.fragments.SplashFragment"
+        android:label="navigation_splash"
+        tools:layout="@layout/fragment_splash" />
+
+    <fragment
+        android:id="@+id/navigateToDashboardFragment"
+        android:name="com.heady.test.modules.dashboard.fragments.DashboardFragment"
+        android:label="navigation_dashboard"
+        tools:layout="@layout/fragment_dashboard" />
+
+</navigation>

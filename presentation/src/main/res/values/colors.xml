@@ -1,6 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <color name="colorPrimary">#008577</color>
-    <color name="colorPrimaryDark">#00574B</color>
-    <color name="colorAccent">#D81B60</color>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!--Material Theme Color-->
+    <color name="colorAccent" tools:keep="@color/colorAccent">#00adef</color>
+    <color name="colorPrimary" tools:keep="@color/colorPrimary">#281976</color>
+    <color name="colorPrimaryDark" tools:keep="@color/colorPrimaryDark">#281976</color>
+    <color name="colorPrimaryDarkOpaque" tools:keep="@color/colorPrimaryDarkOpaque">#50281976
+    </color>
+    <color name="colorPrimaryLight" tools:keep="@color/colorPrimaryLight">#82b1ff</color>
+    <color name="colorPrimaryOpaque" tools:keep="@color/colorPrimaryOpaque">#20281976</color>
+    <color name="colorPrimaryOpaque1" tools:keep="@color/colorPrimaryOpaque">#90000000</color>
+
+    <!--Custom Color-->
+    <color name="colorBlack" tools:keep="@color/colorBlack">#000000</color>
+    <color name="colorGreyShade1" tools:keep="@color/colorGreyShade1">#212121</color>
+    <color name="colorGreyShade2" tools:keep="@color/colorGreyShade2">#303030</color>
+    <color name="colorGreyShade3" tools:keep="@color/colorGreyShade3">#929292</color>
+    <color name="colorGreyShade4" tools:keep="@color/colorGreyShade4">#eeeeee</color>
+    <color name="colorWhite" tools:keep="@color/colorWhite">#ffffff</color>
+    <color name="colorYellow" tools:keep="@color/colorYellow">#f1c40f</color>
 </resources>

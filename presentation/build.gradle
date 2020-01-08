@@ -1,34 +1,173 @@
 apply plugin: 'com.android.application'
-
+apply plugin: 'com.google.gms.google-services'
 apply plugin: 'kotlin-android'
-
+apply plugin: 'androidx.navigation.safeargs.kotlin'
 apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-kapt'
+apply plugin: 'org.owasp.dependencycheck'
+
 
 android {
-    compileSdkVersion 29
-    buildToolsVersion "29.0.2"
+    // SDK & Tool Version Used For Compiling
+    compileSdkVersion TARGET_SDK
+    buildToolsVersion BUILD_TOOLS_VERSION
+
+    // Application Specifications
     defaultConfig {
-        applicationId "com.heady.test"
-        minSdkVersion 21
-        targetSdkVersion 29
-        versionCode 1
-        versionName "1.0"
-        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        applicationId APPLICATION_PACKAGE_NAME
+        minSdkVersion MIN_SDK
+        targetSdkVersion TARGET_SDK
+        multiDexEnabled true
+        versionCode VERSION_CODE
+        versionName VERSION_NAME
+        testInstrumentationRunner ANDROID_JUNIT_RUNNER
+        vectorDrawables.useSupportLibrary = true
     }
+
     buildTypes {
-        release {
+        debug {
+            // To Avoid PNG Crunching.
+            aaptOptions.cruncherEnabled = false
+            // Disable Code Shrinking, Obfuscation & Optimization.
             minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            // Disable Code Shrinking, Obfuscation & Optimization Performed By Android Gradle Plugin.
+            shrinkResources false
+            proguardFiles getDefaultProguardFile(PROGUARD_ANDROID_OPTIMIZE), PROGUARD_RULES
+            debuggable true
+            jniDebuggable true
+            renderscriptDebuggable true
         }
+
+        release {
+            // Enables Code Shrinking, Obfuscation & Optimization.
+            minifyEnabled true
+            // Enables Code Shrinking, Obfuscation & Optimization Performed By Android Gradle plugin.
+            shrinkResources true
+            proguardFiles getDefaultProguardFile(PROGUARD_ANDROID_OPTIMIZE), PROGUARD_RULES
+            debuggable false
+            jniDebuggable false
+            renderscriptDebuggable false
+        }
+    }
+
+    signingConfigs {
+        release {
+            storeFile file(STORE_FILE_PATH)
+            storePassword STORE_PASSWORD
+            keyAlias KEY_ALIAS
+            keyPassword KEY_PASSWORD
+        }
+    }
+
+    // Specifying Java Compiler Version
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    // Specify Kotlin JVM Target
+    kotlinOptions {
+        jvmTarget = JavaVersion.VERSION_1_8
+    }
+
+    // Adding Dimensions [Version]
+    // And Flavour [SandBox], [UAT], [PRODUCTION aka PROD] Of Build
+    flavorDimensions APPLICATION_DIMENSIONS
+    productFlavors {
+        sandbox {
+            dimension APPLICATION_DIMENSIONS
+            applicationIdSuffix SANDBOX_ID_SUFFIX
+            versionNameSuffix SANDBOX_NAME_SUFFIX
+        }
+        uat {
+            dimension APPLICATION_DIMENSIONS
+            applicationIdSuffix UAT_ID_SUFFIX
+            versionNameSuffix UAT_NAME_SUFFIX
+        }
+        prod {
+            dimension APPLICATION_DIMENSIONS
+            signingConfig signingConfigs.release
+        }
+    }
+
+    // Ignore Irrelevant Build Variants
+    variantFilter { variant ->
+        def names = variant.flavors*.name
+        // Ignore Release Build for Dev & UAT Build
+        if (variant.buildType.name == 'release' && (names.contains("sandbox") || names.contains("uat"))) {
+            setIgnore(true)
+        }
+        // Ignore Debug Build for Production
+        else if (variant.buildType.name == 'debug' && names.contains("prod")) {
+            setIgnore(true)
+        }
+    }
+
+    // Rename Generated APK With Relevant Name
+    applicationVariants.all { variant ->
+        variant.outputs.all { output ->
+            def project = "Heady-AT"
+            def separator = "_"
+            def version = variant.versionName
+            def newApkName = "${project}${separator}${version}.apk"
+            outputFileName = new File(newApkName)
+        }
+    }
+
+    dexOptions {
+        preDexLibraries = false
+    }
+
+    // Lint Options To Be Followed
+    lintOptions {
+        checkAllWarnings true
+        warningsAsErrors true
+        abortOnError true
     }
 }
 
 dependencies {
+    // Manual Added Library
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-    implementation 'androidx.appcompat:appcompat:1.1.0'
-    implementation 'androidx.core:core-ktx:1.1.0'
-    testImplementation 'junit:junit:4.12'
-    androidTestImplementation 'androidx.test.ext:junit:1.1.1'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
+    implementation project(':domain')
+    implementation project(':data')
+
+    // LeakCanary For Detecting All Leaks In Debug Mode
+    debugImplementation moduleDebugDependencies.leakCanary
+
+    // Require Library To Be Downloaded Via Gradle From Repository Defined In Project Gradle File
+    implementation moduleDependencies.appCompat
+    implementation moduleDependencies.constraintLayout
+    implementation moduleDependencies.coreKTX
+    implementation moduleDependencies.dagger
+    implementation moduleDependencies.daggerAndroidSupport
+    implementation moduleDependencies.firebaseCore
+    implementation moduleDependencies.firebaseDatabase
+    implementation moduleDependencies.firebaseMessaging
+    implementation moduleDependencies.gson
+    implementation moduleDependencies.intuitSDP
+    implementation moduleDependencies.intuitSSP
+    implementation moduleDependencies.javaX
+    implementation moduleDependencies.kotlin
+    implementation moduleDependencies.legacySupport
+    implementation moduleDependencies.lottie
+    implementation moduleDependencies.material
+    implementation moduleDependencies.multiDex
+    implementation moduleDependencies.navigationFragment
+    implementation moduleDependencies.navigationUI
+    implementation moduleDependencies.rxAndroid
+    implementation moduleDependencies.rxJava
+    implementation moduleDependencies.rxKotlin
+    implementation moduleDependencies.tejoraUtils
+    implementation moduleDependencies.workManager
+    kapt moduleDependencies.daggerAndroidProcessor
+    kapt moduleDependencies.daggerCompiler
+
+    // Runs On JVM Pure Java Test Cases
+    testImplementation moduleTestDependencies.junit
+
+    // Requires Android Framework For Testing Android Components
+    androidTestImplementation moduleTestDependencies.junit
+    androidTestImplementation moduleTestDependencies.runner
+    androidTestImplementation moduleTestDependencies.espresso
 }
