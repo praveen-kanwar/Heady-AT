@@ -1,0 +1,98 @@
+{
+  "project_info": {
+    "project_number": "555519404104",
+    "firebase_url": "https://heady-59ff4.firebaseio.com",
+    "project_id": "heady-59ff4",
+    "storage_bucket": "heady-59ff4.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:555519404104:android:df3a6d29a628ad0488507d",
+        "android_client_info": {
+          "package_name": "com.heady.test"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "555519404104-v4kvtasot274lrnb1vl050ieo3qv9d84.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAZ7WtmPL7iEwx1kKiGWIHYqKDuABB10G0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "555519404104-v4kvtasot274lrnb1vl050ieo3qv9d84.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:555519404104:android:e78ae11b1771f42188507d",
+        "android_client_info": {
+          "package_name": "com.heady.test.sandbox"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "555519404104-v4kvtasot274lrnb1vl050ieo3qv9d84.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAZ7WtmPL7iEwx1kKiGWIHYqKDuABB10G0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "555519404104-v4kvtasot274lrnb1vl050ieo3qv9d84.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:555519404104:android:bb8df812a7414be488507d",
+        "android_client_info": {
+          "package_name": "com.heady.test.uat"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "555519404104-v4kvtasot274lrnb1vl050ieo3qv9d84.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAZ7WtmPL7iEwx1kKiGWIHYqKDuABB10G0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "555519404104-v4kvtasot274lrnb1vl050ieo3qv9d84.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
