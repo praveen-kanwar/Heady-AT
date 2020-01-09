@@ -20,11 +20,4 @@
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.MaterialComponents.Light" />
 
-    <style name="CustomAnimations" />
-
-    <style name="CustomAnimations.grow">
-        <item name="android:windowEnterAnimation">@anim/grow_in</item>
-        <item name="android:windowExitAnimation">@anim/grow_out</item>
-    </style>
-
 </resources>
