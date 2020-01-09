@@ -3,7 +3,6 @@ package com.heady.test.base.application
 import android.content.Context
 import androidx.multidex.MultiDex
 import com.google.gson.Gson
-import com.heady.test.BuildConfig
 import com.heady.test.base.application.di.component.DaggerApplicationComponent
 import com.tejora.utils.Utils
 import dagger.android.AndroidInjector
@@ -37,7 +36,7 @@ class MainApplication : DaggerApplication() {
     // Application Created
     override fun onCreate() {
         super.onCreate()
-        utils.enableLog(BuildConfig.DEBUG)
+        utils.enableLog(true)
         utils.showLog(TAG, "Application Created")
     }
 

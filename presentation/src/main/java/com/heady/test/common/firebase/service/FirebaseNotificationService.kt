@@ -96,7 +96,7 @@ class FirebaseNotificationService : FirebaseMessagingService() {
      * @param token The new token.
      */
     private fun sendRegistrationToServer(token: String?) {
-        // TODO: Implement this method to send token to your app server.
+        // Implement this method to send token to your app server.
         showLog("Registration Token $token")
     }
 

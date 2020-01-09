@@ -10,11 +10,10 @@ import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import com.heady.test.R
 import com.heady.test.base.fragment.BaseFragment
-import com.heady.test.modules.splash.views.SplashFragmentView
 import kotlinx.android.synthetic.main.fragment_splash.*
 
 
-class SplashFragment : BaseFragment(), SplashFragmentView {
+class SplashFragment : BaseFragment() {
 
     /*
      * This method will be called first, even before onCreate(),
@@ -146,9 +145,11 @@ class SplashFragment : BaseFragment(), SplashFragmentView {
                 utils.showLog(TAG, "onAnimationEnd")
                 val handler = Handler()
                 handler.postDelayed({
+                    showSystemUI()
+                    showToolBar()
                     navigationController
                         .navigate(
-                            R.id.navigateToDashboardFragment
+                            R.id.navigateToCategoriesFragment
                         )
                 }, 2000) // Hold for 2 Seconds Before Changing Fragment
             }

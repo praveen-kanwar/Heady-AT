@@ -1,21 +1,22 @@
-package com.heady.test.modules.dashboard.fragments
+package com.heady.test.modules.categories.fragments
 
 import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.activity.addCallback
-import androidx.appcompat.app.AlertDialog
-import androidx.recyclerview.widget.GridLayoutManager
 import com.heady.test.R
 import com.heady.test.base.fragment.BaseFragment
-import kotlinx.android.synthetic.main.fragment_dashboard.*
+import com.heady.test.modules.categories.models.CategoryModelQ
+import com.heady.test.modules.categories.models.CategoryModelR
+import com.heady.test.modules.categories.presenters.CategoriesPresenter
+import com.heady.test.modules.categories.views.CategoriesFragmentView
+import javax.inject.Inject
 
-class DashboardFragment : BaseFragment() {
+class CategoriesFragment : BaseFragment(), CategoriesFragmentView {
 
-    // Layout Manager For RecyclerView
-    private var layoutManager: GridLayoutManager? = null
+    @Inject
+    lateinit var categoriesPresenter: CategoriesPresenter
 
     /*
      * This method will be called first, even before onCreate(),
@@ -40,7 +41,7 @@ class DashboardFragment : BaseFragment() {
     ): View? {
         super.onCreateView(inflater, container, savedInstanceState)
         utils.showLog(TAG, "onCreateView($inflater, $container, $savedInstanceState)")
-        return inflater.inflate(R.layout.fragment_dashboard, container, false)
+        return inflater.inflate(R.layout.fragment_categories, container, false)
     }
 
     /*
@@ -51,10 +52,6 @@ class DashboardFragment : BaseFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         utils.showLog(TAG, "onViewCreated($view, $savedInstanceState)")
-
-        layoutManager = GridLayoutManager(context, 2)
-        dashboardRecyclerView.setHasFixedSize(true)
-        dashboardRecyclerView.layoutManager = layoutManager
     }
 
     /*
@@ -67,6 +64,7 @@ class DashboardFragment : BaseFragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         utils.showLog(TAG, "onActivityCreated($savedInstanceState)")
+        categoriesPresenter.fetchCategories(CategoryModelQ())
     }
 
     /*
@@ -75,7 +73,6 @@ class DashboardFragment : BaseFragment() {
     override fun onStart() {
         super.onStart()
         utils.showLog(TAG, "onStart()")
-        showToolBar()
     }
 
     /*
@@ -85,25 +82,6 @@ class DashboardFragment : BaseFragment() {
     override fun onResume() {
         super.onResume()
         utils.showLog(TAG, "onResume()")
-        // Listener To Manually Handle BackPress On Dashboard Page
-        requireActivity().onBackPressedDispatcher.addCallback(this) {
-            AlertDialog.Builder(context!!)
-                .setCancelable(false)
-                .setTitle(EXIT_CONSENT)
-                .setMessage("Are you sure you want to exit application?")
-                .setPositiveButton("Exit") { dialog, _ ->
-                    dialog.dismiss()
-                    utils.showLog(TAG, "User Opted To Exit")
-                    // To Exit Application
-                    finish()
-                }
-                .setNegativeButton("Cancel") { dialog, _ ->
-                    dialog.dismiss()
-
-                }
-                .create()
-                .show()
-        }
     }
 
     /*
@@ -121,7 +99,7 @@ class DashboardFragment : BaseFragment() {
     override fun onStop() {
         super.onStop()
         utils.showLog(TAG, "onStop()")
-        layoutManager = null
+        showSystemUI()
     }
 
     /*
@@ -131,8 +109,9 @@ class DashboardFragment : BaseFragment() {
      * then that logic can be put up in onDestroyView()
      */
     override fun onDestroyView() {
-        utils.showLog(TAG, "onDestroyView()")
         super.onDestroyView()
+        utils.showLog(TAG, "onDestroyView()")
+
     }
 
     /*
@@ -153,8 +132,11 @@ class DashboardFragment : BaseFragment() {
         utils.showLog(TAG, "onDetach()")
     }
 
+    override fun responseReceived(categoryModelR: CategoryModelR) {
+        utils.showLog(TAG, "Received Categories -> ${gson.toJson(categoryModelR)}")
+    }
+
     companion object {
-        const val TAG = "DashboardFragment"
-        const val EXIT_CONSENT = "Exit Application"
+        private const val TAG = "CategoriesFragment"
     }
 }

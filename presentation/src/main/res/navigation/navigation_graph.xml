@@ -12,9 +12,9 @@
         tools:layout="@layout/fragment_splash" />
 
     <fragment
-        android:id="@+id/navigateToDashboardFragment"
-        android:name="com.heady.test.modules.dashboard.fragments.DashboardFragment"
+        android:id="@+id/navigateToCategoriesFragment"
+        android:name="com.heady.test.modules.categories.fragments.CategoriesFragment"
         android:label="navigation_dashboard"
-        tools:layout="@layout/fragment_dashboard" />
+        tools:layout="@layout/fragment_categories" />
 
 </navigation>

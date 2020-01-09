@@ -1,5 +1,7 @@
 package com.heady.test.domain.common.repository
 
+import com.heady.test.domain.modules.categories.beans.CategoryBeanQ
+import com.heady.test.domain.modules.categories.beans.CategoryBeanR
 import io.reactivex.Observable
 
 
@@ -13,5 +15,5 @@ interface Repository {
     /*
      * To Fetch Data
      */
-    fun fetchData(): Observable<*>
+    fun fetchData(requestBean: CategoryBeanQ): Observable<CategoryBeanR>
 }

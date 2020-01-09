@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".modules.splash.fragments.SplashFragment">
+    tools:context=".modules.categories.fragments.CategoriesFragment">
 
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
@@ -12,12 +12,12 @@
         android:fillViewport="true">
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/dashboardConstraintLayout"
+            android:id="@+id/categoriesConstraintLayout"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
             <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/dashboardRecyclerView"
+                android:id="@+id/categoriesRecyclerView"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 app:layout_constraintBottom_toBottomOf="parent"
