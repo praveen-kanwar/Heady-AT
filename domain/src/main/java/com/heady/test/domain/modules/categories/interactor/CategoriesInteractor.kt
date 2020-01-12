@@ -23,7 +23,7 @@ constructor(
 ) : Interactor<CategoryBeanQ, CategoryBeanR>(backgroundThread, mainThread) {
 
     override fun buildInteractorObservable(requestBean: CategoryBeanQ): Observable<CategoryBeanR> {
-        return repository.fetchData(requestBean)
+        return repository.fetchCategories(requestBean)
     }
 
     companion object {

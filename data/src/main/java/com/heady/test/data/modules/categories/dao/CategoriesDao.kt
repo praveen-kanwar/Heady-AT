@@ -1,11 +1,11 @@
 package com.heady.test.data.modules.categories.dao
 
 import com.google.gson.Gson
-import com.heady.test.data.modules.categories.models.ServerResponseModel
-import com.heady.test.domain.modules.categories.beans.CategoryBean
-import com.heady.test.domain.modules.categories.beans.CategoryBeanR
+import com.heady.test.data.modules.categories.models.RealmCategoryModel
 import com.tejora.utils.Utils
 import io.reactivex.Observable
+import io.reactivex.rxkotlin.toObservable
+import io.realm.Realm
 import javax.inject.Inject
 
 /**
@@ -21,32 +21,69 @@ constructor(
 ) {
 
     /*
-     * Save Data To Local DB.
+     * Fetch Categories Count From Local DB.
      */
-    fun saveData(serverResponseModel: ServerResponseModel): Observable<CategoryBeanR> {
+    fun fetchCategoriesCount(): Observable<Int> {
         return Observable.create { emitter ->
+            utils.showLog(
+                TAG,
+                "Fetching Categories Count From Local Database"
+            )
             try {
-                utils.showLog(
-                    TAG,
-                    "Saving Data To Local Database -> ${gson.toJson(serverResponseModel)}"
-                )
-                // Preparing CaseId Array To Fetch Receipt Issuance Data From Server
-                val categoryBeanList = Observable
-                    .fromIterable(serverResponseModel.categories)
-                    .filter { categoryModel -> categoryModel.products.isEmpty() }
-                    .map { categoryModel ->
-                        CategoryBean(
-                            categoryModel.id,
-                            categoryModel.name,
-                            categoryModel.childCategories
-                        )
-                    }
-                    .toList()
-                    .blockingGet()
-                emitter.onNext(CategoryBeanR(categoryBeanList))
+                // Emitting
+                emitter.onNext(Realm.getDefaultInstance().where(RealmCategoryModel::class.java).findAll().count())
+                // Completing
                 emitter.onComplete()
             } catch (exception: Exception) {
                 emitter.onError(exception)
+            }
+        }
+    }
+
+    /*
+     * Fetch Categories Count From Local DB.
+     */
+    fun fetchCategories(): Observable<List<RealmCategoryModel>> {
+        return Observable.create { emitter ->
+            utils.showLog(
+                TAG,
+                "Fetching Categories List From Local Database"
+            )
+            try {
+                val database = Realm.getDefaultInstance()
+                val queryResult = database.where(RealmCategoryModel::class.java).findAll()
+                // Emitting
+                emitter.onNext(queryResult.toObservable().toList().blockingGet())
+                // Completing
+                emitter.onComplete()
+            } catch (exception: Exception) {
+                emitter.onError(exception)
+            }
+        }
+    }
+
+    /*
+     * Save Data To Local DB.
+     */
+    fun saveCategories(realmCategoryModel: List<RealmCategoryModel>): Observable<Boolean> {
+        return Observable.create { emitter ->
+            utils.showLog(
+                TAG,
+                "Saving Categories To Local Database -> ${gson.toJson(realmCategoryModel)}"
+            )
+            val database: Realm = Realm.getDefaultInstance()
+            try {
+                database.executeTransaction { realm ->
+                    realm.insert(realmCategoryModel)
+                }
+                // Emitting
+                emitter.onNext(true)
+                // Completing
+                emitter.onComplete()
+            } catch (exception: Exception) {
+                emitter.onError(exception)
+            } finally {
+                database.close()
             }
         }
     }

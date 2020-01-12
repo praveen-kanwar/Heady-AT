@@ -15,5 +15,10 @@ interface Repository {
     /*
      * To Fetch Data
      */
-    fun fetchData(requestBean: CategoryBeanQ): Observable<CategoryBeanR>
+    fun fetchData(): Observable<Boolean>
+
+    /*
+     * To Fetch Categories
+     */
+    fun fetchCategories(requestBean: CategoryBeanQ): Observable<CategoryBeanR>
 }

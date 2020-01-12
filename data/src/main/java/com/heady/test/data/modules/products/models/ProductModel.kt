@@ -8,6 +8,6 @@ data class ProductModel(
     val name: String,
     @SerializedName("date_added")
     val dateAdded: String,
-    val variants: List<VariantsModel>,
+    val variants: List<VariantModel>,
     val tax: TaxModel
 ) : IBean

@@ -1,4 +1,4 @@
-package com.heady.test.data.modules.categories.api
+package com.heady.test.data.webservices.api
 
 import com.heady.test.data.modules.categories.models.ServerResponseModel
 import io.reactivex.Observable
@@ -9,7 +9,7 @@ import retrofit2.http.GET
  *
  * Created by Praveen.
  */
-interface CategoriesAPI {
+interface API {
 
     @GET("json")
     fun fetchData(): Observable<ServerResponseModel>

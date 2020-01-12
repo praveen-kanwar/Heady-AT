@@ -1,12 +1,22 @@
 package com.heady.test.data.webservices.restclient
 
+import com.heady.test.data.webservices.api.API
 import com.heady.test.data.webservices.retrofit.RetrofitProvider
+import javax.inject.Inject
 
 /**
- * Contract For RestClient Provider
+ * RestClient For API Consumption
  *
- * Created by Praveen on 01-07-2019.
+ * Created by Praveen.
  */
-interface RestClient {
-    fun getRestClient(retrofitProvider: RetrofitProvider): Any
+class RestClient
+@Inject
+constructor(private val retrofitProvider: RetrofitProvider) {
+
+    val api
+        get() = getRestClient(retrofitProvider) as API
+
+    private fun getRestClient(retrofitProvider: RetrofitProvider): Any {
+        return retrofitProvider.retrofit.create(API::class.java)
+    }
 }
