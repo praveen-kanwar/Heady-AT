@@ -5,15 +5,38 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.addCallback
+import androidx.appcompat.app.AlertDialog
+import androidx.recyclerview.widget.DefaultItemAnimator
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.heady.test.R
 import com.heady.test.base.fragment.BaseFragment
+import com.heady.test.modules.categories.adapters.CategoryAdapter
+import com.heady.test.modules.categories.models.CategoryModel
 import com.heady.test.modules.categories.models.CategoryModelQ
 import com.heady.test.modules.categories.models.CategoryModelR
 import com.heady.test.modules.categories.presenters.CategoriesPresenter
 import com.heady.test.modules.categories.views.CategoriesFragmentView
+import com.tejora.utils.TejoraBus
+import kotlinx.android.synthetic.main.fragment_categories.*
 import javax.inject.Inject
 
+/**
+ * Categories Fragment Responsible For Displaying Categories
+ *
+ * Created by Praveen.
+ */
 class CategoriesFragment : BaseFragment(), CategoriesFragmentView {
+
+    // Layout Manager For RecyclerView
+    private var categoryListLayoutManager: LinearLayoutManager? = null
+
+    // Adapter For RecyclerView
+    @Inject
+    lateinit var categoryAdapter: CategoryAdapter
+
+    // Selected Pre Account List To Add In Today's Appointment
+    private var selectedCategory: CategoryModel? = null
 
     @Inject
     lateinit var categoriesPresenter: CategoriesPresenter
@@ -64,6 +87,13 @@ class CategoriesFragment : BaseFragment(), CategoriesFragmentView {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         utils.showLog(TAG, "onActivityCreated($savedInstanceState)")
+        categoryListLayoutManager = LinearLayoutManager(context)
+        categoriesRecyclerView.apply {
+            itemAnimator = DefaultItemAnimator()
+            setHasFixedSize(true)
+            layoutManager = categoryListLayoutManager
+            adapter = categoryAdapter
+        }
         categoriesPresenter.fetchCategories(CategoryModelQ())
     }
 
@@ -73,6 +103,17 @@ class CategoriesFragment : BaseFragment(), CategoriesFragmentView {
     override fun onStart() {
         super.onStart()
         utils.showLog(TAG, "onStart()")
+        disposableContainer.add(TejoraBus.listen(CategoryModel::class.java).subscribe { categoryModel ->
+            utils.showLog(TAG, "Selected Category: ${gson.toJson(categoryModel)}")
+            selectedCategory = categoryModel
+            val bundle = Bundle()
+            bundle.putIntArray("Argument", categoryModel.childCategories.toIntArray())
+            navigationController
+                .navigate(
+                    R.id.navigateToSubCategoriesFragment,
+                    bundle
+                )
+        })
     }
 
     /*
@@ -82,6 +123,25 @@ class CategoriesFragment : BaseFragment(), CategoriesFragmentView {
     override fun onResume() {
         super.onResume()
         utils.showLog(TAG, "onResume()")
+        // Listener To Manually Handle BackPress On Dashboard Page
+        requireActivity().onBackPressedDispatcher.addCallback(this) {
+            AlertDialog.Builder(context!!)
+                .setCancelable(false)
+                .setTitle(EXIT_CONSENT)
+                .setMessage("Are you sure you want to exit application?")
+                .setPositiveButton("Exit") { dialog, _ ->
+                    dialog.dismiss()
+                    utils.showLog(TAG, "User Opted To Exit")
+                    // To Exit Application
+                    finish()
+                }
+                .setNegativeButton("Cancel") { dialog, _ ->
+                    dialog.dismiss()
+
+                }
+                .create()
+                .show()
+        }
     }
 
     /*
@@ -99,7 +159,10 @@ class CategoriesFragment : BaseFragment(), CategoriesFragmentView {
     override fun onStop() {
         super.onStop()
         utils.showLog(TAG, "onStop()")
-        showSystemUI()
+        // Dispose Interactor
+        if (::categoriesPresenter.isInitialized) {
+            categoriesPresenter.disposeInteractors()
+        }
     }
 
     /*
@@ -134,9 +197,11 @@ class CategoriesFragment : BaseFragment(), CategoriesFragmentView {
 
     override fun responseReceived(categoryModelR: CategoryModelR) {
         utils.showLog(TAG, "Received Categories -> ${gson.toJson(categoryModelR)}")
+        categoryAdapter.setCategoryList(categoryModelR.categoriesList)
     }
 
     companion object {
         private const val TAG = "CategoriesFragment"
+        private const val EXIT_CONSENT = "Exit Application"
     }
 }

@@ -9,8 +9,8 @@ public class RealmProductModel extends RealmObject {
     public Integer id;
     public String name;
     public String dateAdded;
-    public RealmList<RealmVariantModel> variants = new RealmList<>();
     public RealmTaxModel tax;
+    public RealmList<RealmVariantModel> variants = new RealmList<>();
     public Integer viewCount = -1;
     public Integer orderCount = -1;
     public Integer shares = -1;

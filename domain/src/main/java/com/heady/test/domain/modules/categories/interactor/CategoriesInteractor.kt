@@ -27,6 +27,6 @@ constructor(
     }
 
     companion object {
-        const val TAG = "SplashInteractor"
+        const val TAG = "CategoriesInteractor"
     }
 }

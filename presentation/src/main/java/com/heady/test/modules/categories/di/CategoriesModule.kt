@@ -9,7 +9,7 @@ import dagger.Module
 /**
  * Providing Dependencies Of Categories Module
  *
- * Created by Praveen on 01-07-2019.
+ * Created by Praveen.
  */
 @Module
 abstract class CategoriesModule : FragmentModule<CategoriesFragment, CategoriesFragmentView> {

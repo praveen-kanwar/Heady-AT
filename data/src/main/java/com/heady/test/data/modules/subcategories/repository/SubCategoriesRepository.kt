@@ -3,6 +3,7 @@ package com.heady.test.data.modules.subcategories.repository
 import com.heady.test.data.modules.categories.models.CategoryModel
 import com.heady.test.data.modules.subcategories.dao.SubCategoriesDao
 import com.heady.test.data.modules.subcategories.models.RealmSubCategoryModel
+import com.heady.test.domain.modules.subcategories.beans.SubCategoryBeanR
 import com.tejora.utils.Utils
 import io.reactivex.Observable
 import javax.inject.Inject
@@ -47,6 +48,30 @@ constructor(
                             .blockingGet()
                     ).blockingSingle()
                 )
+                emitter.onComplete()
+            } catch (exception: Exception) {
+                emitter.onError(exception)
+            }
+        }
+    }
+
+    fun fetchSubCategoriesCount(subCategoriesIdArray: Array<Int>): Observable<Int> {
+        return Observable.create { emitter ->
+            utils.showLog(TAG, "Fetching Sub-Categories")
+            try {
+                emitter.onNext(subCategoriesDao.fetchSubCategoriesCount(subCategoriesIdArray).blockingSingle())
+                emitter.onComplete()
+            } catch (exception: Exception) {
+                emitter.onError(exception)
+            }
+        }
+    }
+
+    fun fetchSubCategories(subCategoriesIdArray: Array<Int>): Observable<SubCategoryBeanR> {
+        return Observable.create { emitter ->
+            utils.showLog(TAG, "Fetching Sub-Categories")
+            try {
+                emitter.onNext(subCategoriesDao.fetchSubCategories(subCategoriesIdArray).blockingSingle())
                 emitter.onComplete()
             } catch (exception: Exception) {
                 emitter.onError(exception)

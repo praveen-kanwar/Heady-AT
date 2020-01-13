@@ -2,6 +2,8 @@ package com.heady.test.data.modules.subcategories.dao
 
 import com.google.gson.Gson
 import com.heady.test.data.modules.subcategories.models.RealmSubCategoryModel
+import com.heady.test.domain.modules.subcategories.beans.SubCategoryBean
+import com.heady.test.domain.modules.subcategories.beans.SubCategoryBeanR
 import com.tejora.utils.Utils
 import io.reactivex.Observable
 import io.realm.Realm
@@ -41,6 +43,70 @@ constructor(
                 emitter.onError(exception)
             } finally {
                 database.close()
+            }
+        }
+    }
+
+    /*
+     * Fetch SubCategories Count From Local DB.
+     */
+    fun fetchSubCategoriesCount(subCategoriesIdArray: Array<Int>): Observable<Int> {
+        return Observable.create {
+            try {
+                utils.showLog(
+                    TAG,
+                    "Retrieving SubCategories Count For ${gson.toJson(subCategoriesIdArray)}"
+                )
+                it.onNext(
+                    Realm.getDefaultInstance().where(RealmSubCategoryModel::class.java)
+                        .`in`("id", subCategoriesIdArray)
+                        .findAll()
+                        .count()
+                )
+                it.onComplete()
+            } catch (error: Exception) {
+                utils.showLog(TAG, "Error While Finding User -> ${error.message}")
+                it.onError(error)
+            }
+        }
+    }
+
+    /*
+     * Fetch SubCategories From Local DB.
+     */
+    fun fetchSubCategories(subCategoriesIdArray: Array<Int>): Observable<SubCategoryBeanR> {
+        return Observable.create {
+            try {
+                utils.showLog(
+                    TAG,
+                    "Retrieving SubCategories For ${gson.toJson(subCategoriesIdArray)}"
+                )
+                val database = Realm.getDefaultInstance()
+                val queryResult = database.where(RealmSubCategoryModel::class.java)
+                    .`in`("id", subCategoriesIdArray)
+                    .findAll()
+                val subCategoriesList = Observable
+                    .fromIterable(database.copyFromRealm(queryResult))
+                    .map { realmSubCategory ->
+                        SubCategoryBean(
+                            realmSubCategory.id,
+                            realmSubCategory.name,
+                            realmSubCategory.products
+                        )
+                    }
+                    .toList()
+                    .blockingGet()
+
+                utils.showLog(
+                    TAG,
+                    "Retrieved SubCategories -> ${gson.toJson(subCategoriesList)}"
+                )
+
+                it.onNext(SubCategoryBeanR(subCategoriesList))
+                it.onComplete()
+            } catch (error: Exception) {
+                utils.showLog(TAG, "Error While Finding User -> ${error.message}")
+                it.onError(error)
             }
         }
     }

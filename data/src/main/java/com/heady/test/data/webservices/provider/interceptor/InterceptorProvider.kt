@@ -9,7 +9,7 @@ import javax.inject.Inject
 /**
  * HTTP Interceptor Offline & Online Cache Providing
  *
- * Created by Praveen on 01-07-2019.
+ * Created by Praveen.
  */
 class InterceptorProvider
 @Inject

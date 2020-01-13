@@ -11,7 +11,7 @@ import javax.inject.Inject
 /**
  * Retrofit Provider To Create RestClient For API Calls
  *
- * Created by Praveen on 01-07-2019.
+ * Created by Praveen.
  */
 class RetrofitProvider
 @Inject

@@ -26,8 +26,29 @@
                 app:layout_constraintTop_toTopOf="parent"
                 tools:itemCount="5"
                 tools:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                tools:listitem="@layout/adapter_product"
                 tools:scrollbars="vertical"
                 tools:spanCount="2" />
+
+            <Spinner
+                android:id="@+id/sortingMenuSpinner"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:entries="@array/sort_type"
+                android:spinnerMode="dialog"
+                android:visibility="invisible"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                tools:ignore="HardcodedText" />
+
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/sortingFloatingActionButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/_16sdp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:srcCompat="@android:drawable/ic_menu_sort_by_size" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

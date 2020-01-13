@@ -14,7 +14,19 @@
     <fragment
         android:id="@+id/navigateToCategoriesFragment"
         android:name="com.heady.test.modules.categories.fragments.CategoriesFragment"
-        android:label="navigation_dashboard"
+        android:label="navigation_categories"
         tools:layout="@layout/fragment_categories" />
+
+    <fragment
+        android:id="@+id/navigateToSubCategoriesFragment"
+        android:name="com.heady.test.modules.subcategories.fragments.SubCategoriesFragment"
+        android:label="navigation_subcategories"
+        tools:layout="@layout/fragment_subcategories" />
+
+    <fragment
+        android:id="@+id/navigateToProductFragment"
+        android:name="com.heady.test.modules.products.fragments.ProductsFragment"
+        android:label="navigation_products"
+        tools:layout="@layout/fragment_products" />
 
 </navigation>

@@ -10,6 +10,11 @@ import com.heady.test.modules.categories.views.CategoriesFragmentView
 import com.tejora.utils.Utils
 import javax.inject.Inject
 
+/**
+ * Categories Presenter Class To Fetch Data From Data Layer Of Categories
+ *
+ * Created by Praveen.
+ */
 class CategoriesPresenter
 @Inject
 constructor(
@@ -20,7 +25,8 @@ constructor(
 ) : BasePresenter(categoriesInteractor) {
 
     fun fetchCategories(categoryModelQ: CategoryModelQ) {
-        utils.showLog(TAG, "Fetching Category From Server")
+        utils.showLog(TAG, "Fetching Category")
+        categoriesFragmentView.showLoading()
         categoriesInteractor.execute(
             this::onNext,
             this::onError,
@@ -41,10 +47,12 @@ constructor(
 
     override fun onComplete() {
         utils.showLog(TAG, "onComplete")
+        categoriesFragmentView.hideLoading()
     }
 
     override fun onError(e: Throwable) {
         utils.showLog(TAG, "onError ${e.message}")
+        categoriesFragmentView.hideLoading()
         categoriesFragmentView.showError(e.message!!)
     }
 

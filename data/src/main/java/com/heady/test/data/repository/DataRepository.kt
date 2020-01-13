@@ -9,6 +9,10 @@ import com.heady.test.domain.common.repository.Repository
 import com.heady.test.domain.modules.categories.beans.CategoryBean
 import com.heady.test.domain.modules.categories.beans.CategoryBeanQ
 import com.heady.test.domain.modules.categories.beans.CategoryBeanR
+import com.heady.test.domain.modules.products.beans.ProductsBeanQ
+import com.heady.test.domain.modules.products.beans.ProductsBeanR
+import com.heady.test.domain.modules.subcategories.beans.SubCategoryBeanQ
+import com.heady.test.domain.modules.subcategories.beans.SubCategoryBeanR
 import com.tejora.utils.Utils
 import io.reactivex.Observable
 import javax.inject.Inject
@@ -81,7 +85,7 @@ constructor(
 
     override fun fetchCategories(requestBean: CategoryBeanQ): Observable<CategoryBeanR> {
         return Observable.create { emitter ->
-            utils.showLog(TAG, "Saving Products")
+            utils.showLog(TAG, "Fetching Categories")
             try {
                 val categoriesCount = categoriesRepository.fetchCategoriesCount().blockingSingle()
                 if (categoriesCount > 0) {
@@ -121,6 +125,36 @@ constructor(
                         emitter.onNext(CategoryBeanR(arrayListOf()))
                     }
                 }
+                emitter.onComplete()
+            } catch (exception: Exception) {
+                emitter.onError(exception)
+            }
+        }
+    }
+
+    override fun fetchSubCategories(requestBean: SubCategoryBeanQ): Observable<SubCategoryBeanR> {
+        utils.showLog(TAG, "Fetching SubCategories")
+        return if (subCategoriesRepository.fetchSubCategoriesCount(requestBean.childCategories.toTypedArray()).blockingSingle() > 0) {
+            subCategoriesRepository.fetchSubCategories(requestBean.childCategories.toTypedArray())
+        } else {
+            subCategoriesRepository.fetchSubCategories(
+                categoriesRepository.fetchCategoriesByIds(
+                    requestBean.childCategories.toTypedArray()
+                ).blockingSingle()
+            )
+        }
+    }
+
+    override fun fetchProducts(requestBean: ProductsBeanQ): Observable<ProductsBeanR> {
+        utils.showLog(TAG, "Fetching Products")
+        return Observable.create { emitter ->
+            utils.showLog(TAG, "Fetching Sub-Categories")
+            try {
+                emitter.onNext(
+                    ProductsBeanR(
+                        productsRepository.fetchProducts(requestBean.productIdList.toTypedArray()).blockingSingle()
+                    )
+                )
                 emitter.onComplete()
             } catch (exception: Exception) {
                 emitter.onError(exception)

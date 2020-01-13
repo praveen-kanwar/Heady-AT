@@ -5,6 +5,7 @@ import com.heady.test.data.modules.categories.models.CategoryModel
 import com.heady.test.data.modules.categories.models.RealmCategoryModel
 import com.tejora.utils.Utils
 import io.reactivex.Observable
+import io.realm.Realm
 import javax.inject.Inject
 
 /**
@@ -36,6 +37,31 @@ constructor(
             utils.showLog(TAG, "Fetching Categories List")
             try {
                 emitter.onNext(categoriesDao.fetchCategories().blockingSingle())
+                emitter.onComplete()
+            } catch (exception: Exception) {
+                emitter.onError(exception)
+            }
+        }
+    }
+
+    fun fetchCategoriesByIds(subCategoriesIdArray: Array<Int>): Observable<Array<Int>> {
+        return Observable.create { emitter ->
+            utils.showLog(TAG, "Fetching Categories List")
+            try {
+
+                val database = Realm.getDefaultInstance()
+                val queryResult = database.where(RealmCategoryModel::class.java)
+                    .`in`("id", subCategoriesIdArray)
+                    .findAll()
+                emitter.onNext(Observable
+                    .fromIterable(database.copyFromRealm(queryResult))
+                    .flatMapIterable { realmCategoryModel ->
+                        realmCategoryModel.childCategories
+                    }
+                    .toList()
+                    .blockingGet()
+                    .toTypedArray()
+                )
                 emitter.onComplete()
             } catch (exception: Exception) {
                 emitter.onError(exception)

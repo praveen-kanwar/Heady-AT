@@ -7,7 +7,7 @@ import javax.inject.Inject
 /**
  * HTTP Interceptor For Logging API Calls
  *
- * Created by Praveen on 01-07-2019.
+ * Created by Praveen.
  */
 class HttpLoggingInterceptorProvider
 @Inject

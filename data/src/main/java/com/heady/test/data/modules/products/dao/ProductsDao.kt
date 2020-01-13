@@ -2,6 +2,7 @@ package com.heady.test.data.modules.products.dao
 
 import com.google.gson.Gson
 import com.heady.test.data.modules.products.models.RealmProductModel
+import com.heady.test.domain.modules.products.beans.ProductsBean
 import com.tejora.utils.Utils
 import io.reactivex.Observable
 import io.realm.Realm
@@ -41,6 +42,42 @@ constructor(
                 emitter.onError(exception)
             } finally {
                 database.close()
+            }
+        }
+    }
+
+    /*
+     * Fetch Products From Local DB.
+     */
+    fun fetchProducts(productsIdArray: Array<Int>): Observable<List<ProductsBean>> {
+        return Observable.create {
+            try {
+                utils.showLog(
+                    TAG,
+                    "Retrieving Products Of ID -> ${gson.toJson(productsIdArray)}"
+                )
+                val database = Realm.getDefaultInstance()
+                val queryResult = database.where(RealmProductModel::class.java)
+                    .`in`("id", productsIdArray)
+                    .findAll()
+                val productsList = Observable
+                    .fromIterable(database.copyFromRealm(queryResult))
+                    .map { realmProductModel ->
+                        gson.fromJson(gson.toJson(realmProductModel), ProductsBean::class.java)
+                    }
+                    .toList()
+                    .blockingGet()
+
+                utils.showLog(
+                    TAG,
+                    "Retrieved Products -> ${gson.toJson(productsList)}"
+                )
+
+                it.onNext(productsList)
+                it.onComplete()
+            } catch (error: Exception) {
+                utils.showLog(TAG, "Error While Finding User -> ${error.message}")
+                it.onError(error)
             }
         }
     }

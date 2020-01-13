@@ -25,7 +25,7 @@ import javax.net.ssl.X509TrustManager
 /**
  * OkHttpClient Provider For Retrofit Aiding API Calls
  *
- * Created by Praveen on 01-07-2019.
+ * Created by Praveen.
  */
 class OkHttpClientProvider
 @Inject

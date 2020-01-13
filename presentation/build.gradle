@@ -133,6 +133,7 @@ dependencies {
     implementation project(':data')
 
     // LeakCanary For Detecting All Leaks In Debug Mode
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     debugImplementation moduleDebugDependencies.leakCanary
 
     // Require Library To Be Downloaded Via Gradle From Repository Defined In Project Gradle File

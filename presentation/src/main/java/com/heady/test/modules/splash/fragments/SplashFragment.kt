@@ -12,7 +12,11 @@ import com.heady.test.R
 import com.heady.test.base.fragment.BaseFragment
 import kotlinx.android.synthetic.main.fragment_splash.*
 
-
+/**
+ * Fragment Responsible Displaying Splash Screen At Launch
+ *
+ * Created by Praveen.
+ */
 class SplashFragment : BaseFragment() {
 
     /*
@@ -98,7 +102,6 @@ class SplashFragment : BaseFragment() {
     override fun onStop() {
         super.onStop()
         utils.showLog(TAG, "onStop()")
-        showSystemUI()
     }
 
     /*
@@ -159,7 +162,6 @@ class SplashFragment : BaseFragment() {
             }
         })
         splashImageViewLogo.startAnimation(animation)
-
     }
 
     companion object {

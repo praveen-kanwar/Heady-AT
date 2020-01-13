@@ -6,6 +6,7 @@ import com.heady.test.data.modules.products.models.ProductRankingModel
 import com.heady.test.data.modules.products.models.RealmProductModel
 import com.heady.test.data.modules.products.models.RealmTaxModel
 import com.heady.test.data.modules.products.models.RealmVariantModel
+import com.heady.test.domain.modules.products.beans.ProductsBean
 import com.tejora.utils.Utils
 import io.reactivex.Observable
 import javax.inject.Inject
@@ -145,6 +146,18 @@ constructor(
                         .toList()
                         .blockingGet()
                 )
+                emitter.onComplete()
+            } catch (exception: Exception) {
+                emitter.onError(exception)
+            }
+        }
+    }
+
+    fun fetchProducts(productsIdArray: Array<Int>): Observable<List<ProductsBean>> {
+        return Observable.create { emitter ->
+            utils.showLog(TAG, "Fetching Sub-Categories")
+            try {
+                emitter.onNext(productsDao.fetchProducts(productsIdArray).blockingSingle())
                 emitter.onComplete()
             } catch (exception: Exception) {
                 emitter.onError(exception)
